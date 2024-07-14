@@ -3,7 +3,13 @@ from joblib import load
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import joblib
+import sklearn
+import streamlit as st
 
+print(f"joblib version: {joblib.__version__}")
+print(f"scikit-learn version: {sklearn.__version__}")
+print(f"streamlit version: {st.__version__}")
 # Function to load the trained model
 def load_model(model_path):
     if not os.path.exists(model_path):
