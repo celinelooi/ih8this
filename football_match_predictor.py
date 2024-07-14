@@ -3,12 +3,7 @@ from joblib import load
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import joblib
-import sklearn
-
-print(f"joblib version: {joblib.__version__}")
-print(f"scikit-learn version: {sklearn.__version__}")
-print(f"streamlit version: {st.__version__}")
+import numpy as np
 
 # Function to load the trained model
 def load_model(model_path):
@@ -59,25 +54,38 @@ opp_code = teams.index(opponent)  # Encoding opponents based on their index
 hour = time.hour
 day_code = date.weekday()  # Monday is 0 and Sunday is 6
 
+# Randomized default values for hidden features within a realistic range
+ema_goals_scored = np.random.uniform(1.0, 3.0)
+days_since_last = np.random.randint(3, 14)
+rank_difference = np.random.randint(-10, 10)
+form_last_5 = np.random.uniform(0, 3)
+interaction = np.random.uniform(0, 1)
+
 # Prepare the features as expected by the model
 features = pd.DataFrame({
     'team_code': [team_code],
     'venue_code': [venue_code],
     'opp_code': [opp_code],
     'hour': [hour],
-    'day_code': [day_code]
+    'day_code': [day_code],
+    'ema_goals_scored': [ema_goals_scored],
+    'days_since_last': [days_since_last],
+    'rank_difference': [rank_difference],
+    'form_last_5': [form_last_5],
+    'interaction': [interaction]
 })
+
 
 # Prediction button
 if st.button('Predict Result'):
     # Ensure the features match the expected input format
-    expected_features = ['team_code', 'venue_code', 'opp_code', 'hour', 'day_code']
-    if set(features.columns) != set(expected_features):
-        st.error(f"Feature mismatch: Model expects 5 features but received {len(features.columns)}")
-    else:
+    expected_features = ['ema_goals_scored', 'days_since_last', 'rank_difference', 'form_last_5', 'interaction']
+    if set(expected_features).issubset(features.columns):
         # Predict
-        prediction = model.predict(features)
+        prediction = model.predict(features[expected_features])
         result = 'Win' if prediction[0] == 1 else 'Lose'
         
         # Display the prediction
         st.write(f'The prediction for {team} against {opponent} is: {result}')
+    else:
+        st.error(f"Feature mismatch: Model expects {expected_features} but received {list(features.columns)}")
