@@ -2,14 +2,14 @@ import os
 from joblib import load
 import streamlit as st
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import joblib
 import sklearn
-import streamlit as st
 
 print(f"joblib version: {joblib.__version__}")
 print(f"scikit-learn version: {sklearn.__version__}")
 print(f"streamlit version: {st.__version__}")
+
 # Function to load the trained model
 def load_model(model_path):
     if not os.path.exists(model_path):
@@ -47,7 +47,9 @@ if team == opponent:
     st.stop()
 
 venue = st.selectbox('Venue', options=['Home', 'Away'])
-date = st.date_input('Date', min_value=datetime.now().date())
+# Set the minimum date to a year ago from today
+min_date = datetime.now().date() - timedelta(days=365)
+date = st.date_input('Date', min_value=min_date)
 time = st.time_input('Kick-off Time')
 
 # Convert inputs to model input format
