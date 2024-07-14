@@ -1,4 +1,4 @@
-# Ignore virtual environment
+echo "# Ignore virtual environment
 myenv/
 
 # Ignore Python cache files
@@ -16,4 +16,4 @@ __pycache__/
 Thumbs.db
 
 # Ignore log files
-*.log
+*.log" > .gitignore
