@@ -1,25 +1,25 @@
 import os
-from joblib import load
+import pickle
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 
-# Function to load the trained model
 def load_model(model_path):
     if not os.path.exists(model_path):
-        st.error(f"Model file not found at {model_path}")
+        print(f"Model file not found at {model_path}")
         return None
-    return load(model_path)
+    with open(model_path, 'rb') as f:
+        return pickle.load(f)
 
 # Define the model path and load the model
-model_path = os.path.join(os.path.dirname(__file__), 'trained_model.joblib')
+model_path = os.path.join(os.path.dirname(__file__), 'trained_model.pkl')
 model = load_model(model_path)
 
 if model is not None:
-    st.write("Model loaded successfully")
+    print("Model loaded successfully")
 else:
-    st.stop()
+    print("Failed to load the model")
 
 # Title and description
 st.title('Football Match Predictor')
