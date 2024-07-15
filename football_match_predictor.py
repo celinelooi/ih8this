@@ -5,9 +5,10 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 
+# Function to load the trained model
 def load_model(model_path):
     if not os.path.exists(model_path):
-        print(f"Model file not found at {model_path}")
+        st.error(f"Model file not found at {model_path}")
         return None
     with open(model_path, 'rb') as f:
         return pickle.load(f)
@@ -17,9 +18,9 @@ model_path = os.path.join(os.path.dirname(__file__), 'trained_model.pkl')
 model = load_model(model_path)
 
 if model is not None:
-    print("Model loaded successfully")
+    st.write("Model loaded successfully")
 else:
-    print("Failed to load the model")
+    st.stop()
 
 # Title and description
 st.title('Football Match Predictor')
@@ -75,7 +76,6 @@ features = pd.DataFrame({
     'interaction': [interaction]
 })
 
-
 # Prediction button
 if st.button('Predict Result'):
     # Ensure the features match the expected input format
@@ -89,3 +89,4 @@ if st.button('Predict Result'):
         st.write(f'The prediction for {team} against {opponent} is: {result}')
     else:
         st.error(f"Feature mismatch: Model expects {expected_features} but received {list(features.columns)}")
+
